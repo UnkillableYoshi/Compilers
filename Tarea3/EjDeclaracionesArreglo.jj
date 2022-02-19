@@ -1,0 +1,56 @@
+PARSER_BEGIN(EjDeclaracionesArreglo)
+public class EjDeclaracionesArreglo {
+static String [] arreglo=new String[20];
+public static void main(String args[]) throws ParseException {
+EjDeclaracionesArreglo parser = new EjDeclaracionesArreglo(System.in);
+	parser.Inicial();
+	System.out.println("Analisis exitoso");
+	for(int i=0;i<20;i++){System.out.println(arreglo[i]);}
+}
+}
+PARSER_END(EjDeclaracionesArreglo)
+SKIP :{" "| "\t"| "\n"| "\r"}
+
+/*Definicion de tokens para analisis lexico*/
+TOKEN :{
+<BOOLEAN: "boolean">|
+<CHAR: "char"> |
+<ID: ["a"-"z"]>|
+<COMA: ",">
+}
+SPECIAL_TOKEN:{<NOVALIDO:~[]> {System.out.println("Error lexico, caracter o token no valido en la linea: " + matchedToken.beginLine);}
+}
+
+/** Analisis Sintactico */
+void Inicial() :{ }
+{
+(D())+ <EOF>
+}
+
+void D() :{}
+{
+T()L() 
+}
+
+void T() :{}
+{
+<BOOLEAN>|<CHAR>          
+}
+
+void L():{}
+{
+<ID>{String x=token.image;arreglo[0]=x;} Lp()
+}
+
+void Lp():{}
+{
+(LOOKAHEAD(2)<COMA><ID>{String y=token.image;arreglo[1]=y;}Lp())*
+}
+
+/* GRAMATICA
+D --> T L
+T --> boolean | char
+L --> ID Lp
+Lp --> , ID Lp | eps
+*/
+

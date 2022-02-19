@@ -1,0 +1,3 @@
+char a,k
+boolean j,d
+char i,w,c
