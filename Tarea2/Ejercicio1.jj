@@ -1,0 +1,30 @@
+options { Ignore_Case = false; }
+
+PARSER_BEGIN(Ejercicio1)
+	public class Ejercicio1{
+		public static void main (String[] args) throws ParseException{
+		Ejercicio1 anLex = new Ejercicio1(System.in);
+		anLex.unaExpresion();
+		System.out.println("Analisis Terminado.");
+		}
+}
+PARSER_END(Ejercicio1)
+
+TOKEN:
+{
+<MATRI: ["A"] (["0"-"9"]){7} ["a"-"z"]> {System.out.println(image+"@UMICH.MX");}
+}
+
+SKIP:
+{
+" " | "\t" | "\n" | "\r"
+}
+
+SKIP:{
+<~[]>
+}
+
+void unaExpresion(): {}
+{
+(<MATRI>) + <EOF>
+}
