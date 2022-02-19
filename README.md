@@ -1,3 +1,3 @@
 # Compilers
-Compiladores (603) - 21/22  
-UMSNH
+Compiladores - 21/22  
+FIE - UMSNH
