@@ -1,0 +1,119 @@
+options { Ignore_Case = false; }
+
+PARSER_BEGIN(Project1)
+	public class Project1{
+		public static void main (String[] args) throws ParseException{
+		Project1 anLex = new Project1(System.in);
+		anLex.unaExpresion();
+		System.out.println("Analisis Terminado.");
+		}
+}
+PARSER_END(Project1)
+
+
+TOKEN:
+{
+<VOID: "void"> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Tipo void: "+image);}
+|
+<INT: "int"> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Tipo int: "+image);}
+|
+<FLOAT: "float"> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Tipo float: "+image);}
+|
+<CHAR: "char"> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Tipo char: "+image);}
+}
+
+TOKEN:
+{
+<NUMINT: (["0"-"9"])+> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Numero entero: "+image);}
+|
+<NUMFLOAT: (["0"-"9"])+"."(["0"-"9"])+> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Numero flotante: "+image);}
+}
+
+TOKEN:
+{
+<ID: ["a"-"z", "A"-"Z"] ( ["a"-"z", "A"-"Z", "0"-"9"] )* > {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Identificador: "+image);}
+}
+
+TOKEN:
+{
+<OLLAVE: "{"> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Abre llave: "+image);}
+|
+<CLLAVE: "}"> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Cierra llave: "+image);}
+|
+<OPARENT: "("> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Abre parentesis: "+image);}
+|
+<CPARENT: ")"> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Cierra parentesis: "+image);}
+|
+<ORECT: "["> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Abre rectangulo: "+image);}
+|
+<CRECT: "]"> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Cierra rectangulo: "+image);}
+}
+
+TOKEN:
+{
+<OPSUM: "+"> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Operador suma: "+image);}
+|
+<OPSUB: "-"> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Operador resta: "+image);}
+|
+<OPMULTI: "*"> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Operador multiplicacion: "+image);}
+|
+<OPDIV: "/"> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Operador division: "+image);}
+|
+<PUN: "."> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Punto decimal: "+image);}
+|
+<COM: ","> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Separador: "+image);}
+|
+<PUNCOM: ";"> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Punto y coma: "+image);}
+|
+<EQUAL: "="> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Operador Igual: "+image);}
+|
+<EQUIV: "=="> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Operador equivalente: "+image);}
+|
+<OPMAY: ">"> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Operador Mayor que: "+image);}
+|
+<OPMEN: "<"> {System.out.println("Linea: "+matchedToken.beginLine+", Columna: "+matchedToken.beginColumn+". "+"Operador Menor que: "+image);}
+}
+
+SKIP:
+{
+" " | "\t" | "\n" | "\r"
+}
+
+MORE:
+{
+"/*" : COMENTARIO
+}
+
+<COMENTARIO> MORE:
+{
+<~[]>
+}
+
+<COMENTARIO> SKIP:
+{
+"*/" : DEFAULT 
+}
+
+SKIP:
+{
+<~[]>{System.out.println("ERROR: CHARACTER NO VALIDO -> "+image);}
+}
+
+SPECIAL_TOKEN:
+{
+< "."(["0"-"9"])+ | (["0"-"9"])+"." >{System.out.println("ERROR: FLOTANTE NO VALIDO -> " + image + " <-" + " Linea: " + matchedToken.beginLine);}
+|
+< (["0"-"9"])+ ["a"-"z", "A"-"Z"] ( ["a"-"z", "A"-"Z", "0"-"9"] )* >{System.out.println("ERROR: Identificador no puede comenzar con numero -> " + image + " <-" + " Linea: " + matchedToken.beginLine);}
+|
+<COMENTARIO_LINEA: "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+}
+
+void unaExpresion(): {}
+{
+(<NUMINT> | <NUMFLOAT> | <VOID> | <INT> | <FLOAT> | <CHAR> | <ID> 
+| <OLLAVE> | <CLLAVE> | <OPARENT> | <CPARENT> | <ORECT> | <CRECT> 
+| <OPSUM> | <OPSUB> | <OPMULTI> | <OPDIV> | <OPMAY> | <OPMEN>
+| <PUN> | <COM> | <PUNCOM> 
+| <EQUAL> | <EQUIV>) 
++ <EOF>
+}
